@@ -3,6 +3,8 @@
 #include <sstream>
 #include <fstream>
 #include <cctype>
+#include <vector>
+#include <algorithm>
 using namespace std;
 
 #include "SpellChecker.h"
@@ -13,8 +15,9 @@ int main() {
     getline(cin, userSentence);
     istringstream inSS(userSentence);
     string wordsInSentence[30];
+    //vector<string> wordsInSentence;
     int numWords = 0;
-    //For loop to find how many words are in the sentence//
+    //For loop to find how many words are in the sentence
     for (int i = 0; i < userSentence.size(); i++) {
         if (isspace(userSentence[i])) {
             numWords++;
@@ -23,7 +26,7 @@ int main() {
     numWords = numWords + 1;
     string word = "";
     int wordsAcquired = 0;
-    //Going for as long as every word has been aquired//
+    //Going for as long as every word has been aquired
     string punctuation = "";
     int punctIndex = 0;
     string firstWord = "";
@@ -79,7 +82,8 @@ int main() {
                 (wordsInSentence[wordsAcquired -1]).append("n");
             }
         }*/
-        wordsInSentence[wordsAcquired] = word;
+        //wordsInSentence[wordsAcquired] = word;
+        wordsInSentence.push_back(word);
         punctuation = "";
         punctIndex = 0;
         word = "";
@@ -87,10 +91,13 @@ int main() {
         string secondWord = "";
         wordsAcquired++;
     }
+    /*
     for (int x = 0; x < numWords; x++) {
         wordsInSentence[x] = wordsInSentence[x];
         cout << wordsInSentence[x] << " ";
     }
+    */
+    for_each(wordsInSentence.begin(), wordsInSentence.end(), [] (string currWord) {cout << currWord << " ";});
     cout << endl;
     return 0;
 }
