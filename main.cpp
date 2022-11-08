@@ -14,8 +14,8 @@ int main() {
     cout << "Enter a sentence or paragraph." << endl;
     getline(cin, userSentence);
     istringstream inSS(userSentence);
-    string wordsInSentence[30];
-    //vector<string> wordsInSentence;
+    //string wordsInSentence[30];
+    vector<string> wordsInSentence;
     int numWords = 0;
     //For loop to find how many words are in the sentence
     for (int i = 0; i < userSentence.size(); i++) {
