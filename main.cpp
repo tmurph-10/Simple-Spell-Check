@@ -15,6 +15,7 @@ using namespace std;
 #include "SpellChecker.h"
 
 int main() {
+    //asking user for sentence or paragraph
     cout << "Enter a sentence or paragraph." << endl;
 
     string userEntry;
