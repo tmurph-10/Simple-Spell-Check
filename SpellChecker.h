@@ -2,22 +2,20 @@
 #include <string>
 #include <cctype>
 #include <fstream>
+#include <vector>
 using namespace std;
 
 void SpellCheck(string &userInput) {
-    const int MAX_WORDS = 250;
+    const int MAX_WORDS = 300;
     ifstream fin;
     fin.open("Words.txt");
-    int userLetters = userInput.size();
-    int newWordLetters = 0;
     string newWord = "";
-    string allWordsInFile[MAX_WORDS];
-    int allWordMatches[MAX_WORDS];
+    vector<string> allWordsInFile;
+    vector<int> allWordMatches;
     int numWords = 0;
     int capitalLetterIndexs[45];
+
     bool allLettersCapital = true;
-    int numInArray = 0;
-    string exactWordFound = "";
     for (int x = 0; x < userInput.size(); x++) {
         if (userInput[x] != toupper(userInput[x])) {
             allLettersCapital = false;
@@ -27,7 +25,6 @@ void SpellCheck(string &userInput) {
     while (getline(fin, newWord)) {
         int numMatches = 0;
         fin >> newWord;
-        newWordLetters = newWord.size();
         if (allLettersCapital != false) {
             for (int c = 0; c < newWord.size(); c++) {
                 newWord[c] = toupper(newWord[c]);
@@ -45,45 +42,52 @@ void SpellCheck(string &userInput) {
         if (rightCharacter >= (newWord.size() - 1)) {
             exactWordFound = newWord;
         }*/
+
+        //exact word was found, nothing needs to be changed
         if (userInput == newWord) {
-            exactWordFound = newWord;
+            userInput = newWord;
+            return;
         }
-        for (int i = 0; i < userLetters; i++) {
+        for (int i = 0; i < userInput.size(); i++) {
             int j = 0;
-            while (j < newWordLetters && j < userLetters) {
+            while (j < newWord.size() && j < userInput.size()) {
                 if (userInput[i] == newWord[j]) {
                     numMatches++;
                 }
                 j++;
             }
         }
-        allWordsInFile[numWords] = newWord;
-        allWordMatches[numWords] = numMatches;
+        allWordsInFile.push_back(newWord);
+        allWordMatches.push_back(numMatches);
         newWord = "";
-        newWordLetters = 0;
         numWords++;
     }
+
+    //initializing bestWord & maxMatches to first element in vectors
     string bestWord = allWordsInFile[0];
-    int maxMatches = allWordMatches[0];
+    int maxMatches = allWordMatches[0]; 
     string equalWord = "";
     int wordToLookAt = 0;
+
     for (int i = 0; i <= numWords; i++) {
         for (int j = i + 1; j <= numWords; j++) {
             wordToLookAt = allWordMatches[j];
-            if (maxMatches < wordToLookAt) {
+            if (maxMatches < wordToLookAt) { //maxMatches will be updated if a word has more matches
                 maxMatches = wordToLookAt;
                 bestWord = allWordsInFile[j];
                 equalWord = "";
             }
-            else if (maxMatches == wordToLookAt) {
+            else if (maxMatches == wordToLookAt) { //if a word is encountered with equal matches to maxMatches
                 equalWord = allWordsInFile[j];
                 int bestWordMatches = 0;
                 int equalWordMatches = 0;
-                for (int m = 0; m < userInput.size(); m++) {
-                    if (bestWord[m] == userInput[m]) {
+                //now instead of just looking at char matches, looking to see which is most similar
+                //at each index of the strings
+                for (int i = 0; i < userInput.size(); i++) {
+                    if (bestWord[i] == userInput[i]) {
                         bestWordMatches++;
                     }
-                    if (equalWord[m] == userInput[m]) {
+                    if (equalWord[i] == userInput[i]) {
                         equalWordMatches++;
                     }
                 }
@@ -94,20 +98,25 @@ void SpellCheck(string &userInput) {
                 else if (bestWordMatches > equalWordMatches) {
                     equalWord = "";
                 }
+                //if the words have the same amount of matches at each index the smaller of the two words is picked
                 else if (bestWordMatches == equalWordMatches) {
                     if (equalWord.size() < bestWord.size()) {
                         bestWord = equalWord;
                         equalWord = "";
                     }
-                    if (equalWord.size() > userInput.size()) {
+                    else  {
                         equalWord = "";
                     }
                 }
             }
         }
     }
+    //hard coding some very specific cases for userEntry
     if (userInput == "j" || userInput == "u" || userInput == "o" || userInput == "k" || userInput == "l" || userInput == "I" || userInput == "i") {
         bestWord = "I";
+    }
+    if (userInput == "Im") {
+        bestWord = "I'm";
     }
     if (userInput == "youre") {
         bestWord = "you're";
@@ -115,14 +124,11 @@ void SpellCheck(string &userInput) {
     if (userInput == "dont") {
         bestWord = "don't";
     }
-    for (int j = 0; j < MAX_WORDS; j++) {
-        allWordMatches[j] = 0;
-        allWordsInFile[j] = "";
-    }
-    if (exactWordFound == "") {
-        userInput = bestWord;
-    }
-    else{
-        userInput = exactWordFound;
-    }
+
+    //clearing vectors
+    allWordMatches.clear();
+    allWordsInFile.clear();
+
+    //setting userInput reference equal to bestWord
+    userInput = bestWord;
 }

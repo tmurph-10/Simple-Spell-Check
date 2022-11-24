@@ -1,44 +1,51 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-#include <fstream>
 #include <cctype>
 #include <vector>
 #include <algorithm>
+/*
+using std::cout; using std::endl; using std::cin;
+using std::string;
+using std::vector;
+using std::istringstream;
+*/
 using namespace std;
 
 #include "SpellChecker.h"
 
 int main() {
-    string userSentence;
     cout << "Enter a sentence or paragraph." << endl;
-    getline(cin, userSentence);
-    istringstream inSS(userSentence);
-    string wordsInSentence[30];
-    //vector<string> wordsInSentence;
+
+    string userEntry;
+    getline(cin, userEntry);
+    istringstream inSS(userEntry);
+    vector<string> enteredWords;
     int numWords = 0;
     //For loop to find how many words are in the sentence
-    for (int i = 0; i < userSentence.size(); i++) {
-        if (isspace(userSentence[i])) {
+    for (int i = 0; i < userEntry.size(); i++) {
+        if (isspace(userEntry[i])) {
             numWords++;
         }
     }
     numWords = numWords + 1;
     string word = "";
     int wordsAcquired = 0;
-    //Going for as long as every word has been aquired
     string punctuation = "";
     int punctIndex = 0;
-    string firstWord = "";
-    string secondWord = "";
     char letter;
+    //Going for as long as every word has been aquired
     while (wordsAcquired <= numWords) {
         inSS >> word;
+        //checking if a string has a '/' in it
         if (word.find("/") != string::npos) {
-            firstWord = word[0];
+            string firstWord = "";
+            string secondWord = "";
             size_t slashIndex = word.find("/");
+            //setting firstword equal to all char before '/'
             firstWord = word.substr(0, slashIndex);
             SpellCheck(firstWord);
+            //setting secondWord equal to all char after '/'
             secondWord = word.substr((slashIndex + 1), (word.size() - 1));
             SpellCheck(secondWord);
             word = firstWord;
@@ -83,7 +90,7 @@ int main() {
             }
         }*/
         //wordsInSentence[wordsAcquired] = word;
-        wordsInSentence.push_back(word);
+        enteredWords.push_back(word);
         punctuation = "";
         punctIndex = 0;
         word = "";
@@ -91,13 +98,9 @@ int main() {
         string secondWord = "";
         wordsAcquired++;
     }
-    /*
-    for (int x = 0; x < numWords; x++) {
-        wordsInSentence[x] = wordsInSentence[x];
-        cout << wordsInSentence[x] << " ";
-    }
-    */
-    for_each(wordsInSentence.begin(), wordsInSentence.end(), [] (string currWord) {cout << currWord << " ";});
+
+    //ouputting every spell checked word
+    for_each(enteredWords.begin(), enteredWords.end(), [] (string currWord) {cout << currWord << " ";});
     cout << endl;
     return 0;
 }

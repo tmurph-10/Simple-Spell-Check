@@ -1,5 +1,8 @@
-Dont Read
-Dont Read
+
+
+hello
+hi
+hey
 basketball
 football
 soccer
@@ -68,6 +71,7 @@ it
 it's
 really
 good
+I'm
 best
 sport
 sport's
@@ -77,6 +81,7 @@ but
 cool
 definitely
 do
+doing
 fun
 awesome
 raw
@@ -189,6 +194,7 @@ sentence
 paragraph
 work
 works
+working
 job
 program
 finally
@@ -252,3 +258,4 @@ while
 since 
 used 
 knew
+else
